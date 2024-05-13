@@ -3,6 +3,9 @@
 # Stop execution if any command fails
 set -e
 
+# Export the environment variable
+export VITE_API_BASE_URL="http://api/v1/"
+
 # Navigate to the frontend directory
 cd frontend
 
@@ -15,6 +18,6 @@ cd ..
 
 # Start docker-compose services
 echo "Starting Docker Compose services..."
-docker-compose up -d
+docker-compose up -d --build
 
 # Optional: if you want docker-compose to run in detached mode, use `docker-compose up -d`

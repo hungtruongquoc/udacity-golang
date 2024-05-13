@@ -13,46 +13,15 @@ import (
 
 func TestEndpoints(t *testing.T) {
 	router := mux.NewRouter()
-	router.HandleFunc("/customers", getCustomers).Methods("GET")
-	router.HandleFunc("/customers", createACustomer).Methods("POST")
-	router.HandleFunc("/customers/{id:[0-9]+}", getCustomerByID).Methods("GET")
-	router.HandleFunc("/customers/{id:[0-9]+}", deleteCustomerByID).Methods("DELETE")
-	router.HandleFunc("/customers/{id:[0-9]+}", patchCustomer).Methods("PATCH")
-
-	// Test getDictionary
-	t.Run("TestGetDictionary", func(t *testing.T) {
-		req, err := http.NewRequest("GET", "/", nil)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		rr := httptest.NewRecorder()
-		router.ServeHTTP(rr, req)
-
-		if status := rr.Code; status != http.StatusOK {
-			t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
-		}
-
-		var actual map[string]string
-		err = json.Unmarshal(rr.Body.Bytes(), &actual)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		expected := map[string]string{
-			"Go":     "A programming language created by Google.",
-			"Gopher": "A software engineer who builds with Go.",
-			"Golang": "Another name for Go.",
-		}
-
-		if !reflect.DeepEqual(actual, expected) {
-			t.Errorf("handler returned unexpected body: got %v want %v", actual, expected)
-		}
-	})
+	router.HandleFunc("/v1/customers/{id:[0-9]+}", getCustomerByID).Methods("GET")
+	router.HandleFunc("/v1/customers/{id:[0-9]+}", deleteCustomerByID).Methods("DELETE")
+	router.HandleFunc("/v1/customers/{id:[0-9]+}", patchCustomer).Methods("PATCH")
+	router.HandleFunc("/v1/customers", getCustomers).Methods("GET")
+	router.HandleFunc("/v1/customers", createACustomer).Methods("POST")
 
 	// Test getCustomers
 	t.Run("TestGetCustomers", func(t *testing.T) {
-		req, err := http.NewRequest("GET", "/customers", nil)
+		req, err := http.NewRequest("GET", "/v1/customers", nil)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -92,7 +61,7 @@ func TestEndpoints(t *testing.T) {
 		}
 
 		// Create a request to pass to our handler.
-		request, err := http.NewRequest("POST", "/customers", bytes.NewBuffer(jsonData))
+		request, err := http.NewRequest("POST", "/v1/customers", bytes.NewBuffer(jsonData))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -126,12 +95,12 @@ func TestEndpoints(t *testing.T) {
 
 	// Test getCustomerByID
 	t.Run("TestGetCustomerByID", func(t *testing.T) {
-		validReq, err := http.NewRequest("GET", fmt.Sprintf("/customers/%d", 1), nil)
+		validReq, err := http.NewRequest("GET", fmt.Sprintf("/v1/customers/%d", 1), nil)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		invalidReq, err := http.NewRequest("GET", "/customers/9999", nil)
+		invalidReq, err := http.NewRequest("GET", "/v1/customers/9999", nil)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -172,7 +141,7 @@ func TestEndpoints(t *testing.T) {
 
 	t.Run("TestDeleteCustomerByID", func(t *testing.T) {
 		// Create a request to delete a customer.
-		request, err := http.NewRequest("DELETE", "/customers/1", nil)
+		request, err := http.NewRequest("DELETE", "/v1/customers/1", nil)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -200,7 +169,7 @@ func TestEndpoints(t *testing.T) {
 
 	t.Run("TestDeleteCustomerByInvalidID", func(t *testing.T) {
 		// Create a request to delete a customer.
-		request, err := http.NewRequest("DELETE", "/customers/999999", nil)
+		request, err := http.NewRequest("DELETE", "/v1/customers/999999", nil)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -221,7 +190,7 @@ func TestEndpoints(t *testing.T) {
 		}
 		updateBody, _ := json.Marshal(updateData)
 
-		request, err := http.NewRequest("PATCH", "/customers/999999", bytes.NewBuffer(updateBody))
+		request, err := http.NewRequest("PATCH", "/v1/customers/999999", bytes.NewBuffer(updateBody))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -243,7 +212,7 @@ func TestEndpoints(t *testing.T) {
 		}
 		updateBody, _ := json.Marshal(updateData)
 
-		request, err := http.NewRequest("PATCH", "/customers/3", bytes.NewBuffer(updateBody))
+		request, err := http.NewRequest("PATCH", "/v1/customers/3", bytes.NewBuffer(updateBody))
 		if err != nil {
 			t.Fatal(err)
 		}

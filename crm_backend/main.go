@@ -157,11 +157,11 @@ func main() {
 	// Create a new router
 	router := mux.NewRouter()
 
-	router.HandleFunc("/customers/{id:[0-9]+}", getCustomerByID).Methods("GET")
-	router.HandleFunc("/customers/{id:[0-9]+}", deleteCustomerByID).Methods("DELETE")
-	router.HandleFunc("/customers/{id:[0-9]+}", patchCustomer).Methods("PATCH")
-	router.HandleFunc("/customers", getCustomers).Methods("GET")
-	router.HandleFunc("/customers", createACustomer).Methods("POST")
+	router.HandleFunc("/v1/customers/{id:[0-9]+}", getCustomerByID).Methods("GET")
+	router.HandleFunc("/v1/customers/{id:[0-9]+}", deleteCustomerByID).Methods("DELETE")
+	router.HandleFunc("/v1/customers/{id:[0-9]+}", patchCustomer).Methods("PATCH")
+	router.HandleFunc("/v1/customers", getCustomers).Methods("GET")
+	router.HandleFunc("/v1/customers", createACustomer).Methods("POST")
 	// Serve static files under the 'static' directory only if no other route matches.
 	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("static/"))))
 
