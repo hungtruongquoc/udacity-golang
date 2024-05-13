@@ -165,6 +165,6 @@ func main() {
 	// Serve static files under the 'static' directory only if no other route matches.
 	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("static/"))))
 
-	fmt.Println("Server is starting on port 3000...")
+	fmt.Println("Server is starting on port 80...")
 	http.ListenAndServe(":80", router)
 }
