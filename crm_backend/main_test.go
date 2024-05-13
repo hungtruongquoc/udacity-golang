@@ -13,7 +13,6 @@ import (
 
 func TestEndpoints(t *testing.T) {
 	router := mux.NewRouter()
-	router.HandleFunc("/", getDictionary).Methods("GET")
 	router.HandleFunc("/customers", getCustomers).Methods("GET")
 	router.HandleFunc("/customers", createACustomer).Methods("POST")
 	router.HandleFunc("/customers/{id:[0-9]+}", getCustomerByID).Methods("GET")
