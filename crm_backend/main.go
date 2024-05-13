@@ -166,5 +166,5 @@ func main() {
 	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("static/"))))
 
 	fmt.Println("Server is starting on port 3000...")
-	http.ListenAndServe(":3000", router)
+	http.ListenAndServe(":80", router)
 }
